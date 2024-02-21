@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_STATES 100
+
+
+void epsilonClosure(int nfa[][MAX_STATES], int numStates, int state, bool visited[]) {
+    if (visited[state]) 
+        return;
+
+    visited[state] = true;
+    for (int i = 0; i < numStates; i++) {
+        if (nfa[state][i] == 1)
+            epsilonClosure(nfa, numStates, i, visited);
+    }
+}
+int main() {
+    int numStates;
+    printf("Enter the number of states in the NFA: ");
+    scanf("%d", &numStates);
+
+    int nfa[MAX_STATES][MAX_STATES];
+    printf("Enter the NFA transition table (0 for no transition, 1 for transition):\n");
+    for (int i = 0; i < numStates; i++) {
+        printf("Enter transitions for state %d (separated by spaces): ", i);
+        for (int j = 0; j < numStates; j++) {
+            scanf("%d", &nfa[i][j]);
+        }
+    }
+    printf("\nε-Closures:\n");
+    for (int i = 0; i < numStates; i++) {
+        bool visited[MAX_STATES] = {false};
+        epsilonClosure(nfa, numStates, i, visited);
+        printf("ε-Closure(%d): { ", i);
+        for (int j = 0; j < numStates; j++) {
+            if (visited[j])
+                printf("%d ", j);
+        }
+        printf("}\n");
+    }
+
+    return 0;
+}
