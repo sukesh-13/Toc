@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX_SIZE 100
+int isAccepted(char input[]) {
+    int state = 0; 
+    int head = 0; 
+    int tapeLength = strlen(input); 
+    while (1) {
+        if (head >= tapeLength) {
+            if (state == 2)
+                return 1;
+            else
+                return 0;
+        }
+        char symbol = input[head];
+        switch (state) {
+            case 0:
+                if (symbol == '0') {
+                    input[head] = 'X'; 
+                    state = 1;
+                    head++; 
+                } else if (symbol == 'Y') {
+                    state = 2;
+                    head--; 
+                } else {
+                    return 0;
+                }
+                break;
+            case 1:
+                if (symbol == '0') {
+                    head++; 
+                } else if (symbol == 'Y') {
+                    state = 0;
+                    head--;
+                } else if (symbol == '1') {
+                    return 0; 
+                }
+                break;
+            case 2:
+                if (symbol == 'Y') {
+                    head--; 
+                } else if (symbol == 'X') {
+                    head++; 
+                } else if (symbol != '1') {
+                    return 0; 
+                }
+                break;
+        }
+    }
+}
+
+int main() {
+    char input[MAX_SIZE];
+    printf("Enter a string: ");
+    scanf("%s", input);
+
+    if (isAccepted(input)) {
+        printf("Accepted\n");
+    } else {
+        printf("Rejected\n");
+    }
+
+    return 0;
+}
